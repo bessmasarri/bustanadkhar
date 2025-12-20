@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+.text-amiri {
+  font-family: var(--font-amiri);
+  line-height: 2; /* Comfortable reading for Arabic */
+}
