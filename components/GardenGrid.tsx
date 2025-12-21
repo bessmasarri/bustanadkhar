@@ -1,67 +1,108 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { Flower, ShoppingBag, Sparkles } from "lucide-react";
 
-interface GardenGridProps {
-    flowers: number; // number of flowers planted
-    seeds: number;   // available seeds (based on points/30)
-    onPlant: () => void;
+interface FlowerItem {
+    type: string;
+    emoji: string;
+    price: number;
+    label: string;
 }
 
-export default function GardenGrid({ flowers, seeds, onPlant }: GardenGridProps) {
-    // 5x4 Grid = 20 slots
-    const totalSlots = 20;
+export const FLOWER_SHOP: FlowerItem[] = [
+    { type: "tulip", emoji: "🌷", price: 30, label: "توليب" },
+    { type: "rose", emoji: "🌹", price: 50, label: "جوري" },
+    { type: "sunflower", emoji: "🌻", price: 80, label: "دوار الشمس" },
+    { type: "blooming", emoji: "🌸", price: 100, label: "زهرة الربيع" },
+    { type: "cactus", emoji: "🌵", price: 40, label: "صبار خجول" },
+];
+
+interface GardenProps {
+    points: number;
+    purchasedFlowers: { flower_type: string }[];
+    onBuy: (type: string, price: number) => void;
+    gender: "boy" | "girl";
+}
+
+export default function GardenGrid({ points, purchasedFlowers, onBuy, gender }: GardenProps) {
+    const isBoy = gender === "boy";
 
     return (
-        <div className="w-full bg-white/50 backdrop-blur-md rounded-3xl p-6 border border-white/60 shadow-xl">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-slate-800">بستاني</h2>
-                <div className="flex gap-2 items-center">
-                    <span className="text-sm font-medium text-slate-600 bg-white px-3 py-1 rounded-full shadow-sm">
-                        🌱 {seeds} بذور متاحة
-                    </span>
-                    <button
-                        onClick={onPlant}
-                        disabled={seeds < 1}
-                        className="bg-green-500 hover:bg-green-600 disabled:bg-slate-300 text-white px-4 py-1 rounded-full text-sm font-bold shadow-md transition-colors"
-                    >
-                        ازرع وردة
-                    </button>
+        <div className="space-y-6">
+            {/* Garden Area */}
+            <div className="glass-panel-light rounded-[2.5rem] p-6 border-4 border-white shadow-2xl bg-white/40">
+                <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-black text-slate-800 flex items-center gap-2 font-cairo">
+                        <Flower className="text-green-500" />
+                        بستانك الجميل ✨
+                    </h3>
+                    <div className="px-4 py-1 bg-green-100 text-green-700 rounded-full font-bold text-sm">
+                        لديك {purchasedFlowers.length} {purchasedFlowers.length === 1 ? "زهرة" : "زهور"}
+                    </div>
                 </div>
-            </div>
 
-            <div className="grid grid-cols-5 gap-2 md:gap-4 aspect-[5/4]">
-                {Array.from({ length: totalSlots }).map((_, i) => {
-                    const isFlower = i < flowers;
-                    // You could add logic for "growing" state if we had stored seed positions
-
-                    return (
-                        <div
-                            key={i}
-                            className="bg-green-100/50 rounded-lg flex items-center justify-center relative border border-green-200/30"
-                        >
-                            {isFlower ? (
+                {purchasedFlowers.length === 0 ? (
+                    <div className="h-40 flex flex-col items-center justify-center text-slate-400 bg-white/20 rounded-3xl border-2 border-dashed border-white/60 text-center px-4">
+                        <p className="font-bold text-lg">{isBoy ? "واصل يا بطل" : "واصلي يا بطلة"}، بستانك فارغ حالياً..</p>
+                        <p className="text-sm">{isBoy ? "اقرأ الأذكار لتجمع النقاط وتشتري الزهور!" : "اقرئي الأذكار لتجمعي النقاط وتشتري الزهور!"} 👇</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-4 sm:grid-cols-5 gap-3 p-2">
+                        <AnimatePresence>
+                            {purchasedFlowers.map((f, i) => (
                                 <motion.div
-                                    initial={{ scale: 0, rotate: -45 }}
+                                    key={i}
+                                    initial={{ scale: 0, rotate: -20 }}
                                     animate={{ scale: 1, rotate: 0 }}
-                                    transition={{ type: "spring", bounce: 0.5 }}
-                                    className="text-3xl md:text-4xl filter drop-shadow-md"
+                                    className="aspect-square bg-white/50 rounded-2xl flex items-center justify-center text-3xl shadow-sm border border-white hover:scale-110 transition-transform cursor-default"
                                 >
-                                    🌷
+                                    {FLOWER_SHOP.find(s => s.type === f.flower_type)?.emoji || "🌸"}
                                 </motion.div>
-                            ) : (
-                                <div className="w-2 h-2 bg-green-200 rounded-full" />
-                            )}
-                        </div>
-                    );
-                })}
+                            ))}
+                        </AnimatePresence>
+                    </div>
+                )}
             </div>
 
-            {flowers >= totalSlots && (
-                <div className="mt-4 text-center text-purple-600 font-bold animate-pulse">
-                    🎉 مذهل! لقد أكملت البستان!
+            {/* Shop Area */}
+            <div className="glass-panel-light rounded-[2.5rem] p-6 border-4 border-white shadow-2xl bg-indigo-50/50">
+                <h3 className="text-xl font-black text-slate-800 flex items-center gap-2 mb-6 font-cairo">
+                    <ShoppingBag className="text-indigo-500" />
+                    متجر الزهور 🧺
+                </h3>
+
+                <div className="grid grid-cols-2 gap-4">
+                    {FLOWER_SHOP.map((item) => {
+                        const canAfford = points >= item.price;
+                        return (
+                            <motion.div
+                                key={item.type}
+                                whileHover={{ y: -5 }}
+                                className="bg-white p-4 rounded-3xl shadow-md border border-slate-100 flex flex-col items-center gap-2"
+                            >
+                                <span className="text-4xl mb-1">{item.emoji}</span>
+                                <span className="font-bold text-slate-700 font-cairo">{item.label}</span>
+                                <div className="flex items-center gap-1 text-amber-500 font-extrabold text-sm">
+                                    <span>{item.price}</span>
+                                    <Sparkles size={12} />
+                                </div>
+
+                                <button
+                                    onClick={() => onBuy(item.type, item.price)}
+                                    disabled={!canAfford}
+                                    className={`mt-2 w-full py-2 rounded-xl font-bold transition-all shadow-sm font-cairo ${canAfford
+                                        ? "bg-green-500 text-white hover:bg-green-600 active:scale-95"
+                                        : "bg-slate-100 text-slate-400 cursor-not-allowed"
+                                        }`}
+                                >
+                                    {canAfford ? "اشترِ الآن" : "نقاطك لا تكفي"}
+                                </button>
+                            </motion.div>
+                        );
+                    })}
                 </div>
-            )}
+            </div>
         </div>
     );
 }

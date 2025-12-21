@@ -1,14 +1,89 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  html {
-    -webkit-tap-highlight-color: transparent;
+@theme inline {
+  --color-background: #fdfbf7;
+  --color-foreground: #2d3748;
+  --color-primary: #81e6d9;
+  /* Soft Teal */
+  --color-primary-dark: #4fd1c5;
+  --color-secondary: #f6ad55;
+  /* Soft Orange */
+  --color-accent: #fc8181;
+  /* Soft Red */
+
+  --font-cairo: var(--font-cairo);
+  --font-amiri: var(--font-amiri);
+}
+
+:root {
+  --background: #fdfbf7;
+  --foreground: #2d3748;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-cairo), sans-serif;
+}
+
+/* Custom Utilities for RTL if needed, though 'dir=rtl' handles most */
+.font-amiri {
+  font-family: var(--font-amiri), serif;
+}
+
+/* Keep existing animations and utilities needed for the new UI */
+/* Islamic Geometric Pattern Overlay */
+.pattern-overlay {
+  background-color: transparent;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 10%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Soft Float Animation */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
   }
 }
 
-.text-amiri {
-  font-family: var(--font-amiri);
-  line-height: 2; /* Comfortable reading for Arabic */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+
+.glass-panel-light {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
 }
