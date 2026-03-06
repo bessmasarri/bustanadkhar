@@ -1,8 +1,8 @@
 # 🌸 Bustan Al-Athkar (بستان الأذكار)
 
-Welcome to my project! **Bustan Al-Athkar** is a kid-friendly web app designed to make learning and reading daily Adhkar (Islamic reminders) a fun and rewarding adventure. 🐾✨
+Welcome to my project! **Bustan Al-Athkar** is a kid-friendly web app designed to make learning and reading daily Adhkar (Islamic reminders) a fun and rewarding adventure. 
 
-## 🍃 What is this app?
+## What is this app?
 I built this app to help children stay connected with their daily Dhikr in a way that feels like a game. Instead of just reading text, they are growing a **virtual garden**!
 
 ### Key Features:
